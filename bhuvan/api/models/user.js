@@ -14,12 +14,21 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  department: {
+    type: String,
+    required: true,
+  },
+  verified: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   verificationCode: {
     type: Boolean,
     required: false,
   },
   verificationToken: String,
-  profileImage: String,
+  // profileImage: String,
   userDescription: {
     type: String,
     default: null,
