@@ -20,36 +20,76 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userRole, setUserRole] = useState("");
   const router = useRouter();
+
+  //const userRole = setRole;
+
+  // useEffect(() => {
+  //   const checkLoginStatus = async () => {
+  //     try {
+  //       const token = await AsyncStorage.getItem("authToken");
+  //       if (token) {
+  //         //const userRole = "admin" || "user";
+
+  //         if (userRole === "user") {
+  //           //router.replace("/(tabs)/home");
+  //         } else if (userRole === "admin") {
+  //           //router.replace("/(admin)/dashboard");
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+
+  //   checkLoginStatus();
+  // }, []);
+
+  const handleLogin = () => {
+    const user = {
+      email: email,
+      password: password,
+      role: "role",
+    };
+
+    axios.post("http://192.168.1.3:3000/login", user).then((response) => {
+      console.log(response);
+      const token = response.data.token;
+      const role = response.data.role;
+      setUserRole(role);
+      //console.log(role);
+      AsyncStorage.setItem("authToken", token);
+      Alert.alert("Login successful");
+
+      if (role === "user") {
+        router.replace("/(tabs)/home");
+      } else if (role === "admin") {
+        router.replace("/(admin)/dashboard");
+      }
+    });
+  };
 
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
         if (token) {
-          router.replace("/(tabs)/home");
+          //const userRole = "admin" || "user";
+
+          if (userRole === "user") {
+            router.replace("/(tabs)/home");
+          } else if (userRole === "admin") {
+            router.replace("/(admin)/dashboard");
+          }
         }
       } catch (error) {
         console.log(error);
       }
     };
+
     checkLoginStatus();
-  }, []);
-
-  const handleLogin = () => {
-    const user = {
-      email: email,
-      password: password,
-    };
-
-    axios.post("http://192.168.1.3:3000/login", user).then((response) => {
-      console.log(response);
-      const token = response.data.token;
-      AsyncStorage.setItem("authToken", token);
-      Alert.alert("Login successful");
-      router.replace("/(tabs)/home");
-    });
-  };
+  }, [userRole]);
 
   return (
     <SafeAreaView

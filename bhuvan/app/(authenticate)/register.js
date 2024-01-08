@@ -26,6 +26,7 @@ const register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
 
   //const [image, setImage] = useState("");
   const router = useRouter();
@@ -36,6 +37,7 @@ const register = () => {
       name: name,
       email: email,
       password: password,
+      role: role,
     };
 
     axios
@@ -47,11 +49,24 @@ const register = () => {
         setEmail("");
         setPassword("");
         setDepartment("");
+        setRole("");
       })
       .catch((error) => {
-        Alert.alert("Registration failed", "Please try again");
-        console.log("Registration failed", error);
+        //console.log(email);
+        Alert.alert("E-mail already exists!", "Please try another one.");
+        console.log("E-mail already exists!", error);
       });
+  };
+
+  const handleCancel = () => {
+    const okay = Alert.alert(
+      "Are you sure want to cancel?",
+      "Your data will be lost!"
+    );
+    console.log(okay);
+    if (okay) {
+      router.replace("/(admin)/dashboard");
+    }
   };
 
   return (
@@ -71,7 +86,7 @@ const register = () => {
             style={{
               fontSize: 25,
               fontWeight: "bold",
-              marginTop: 20,
+              marginTop: 0,
               color: "#041E42",
             }}
           >
@@ -79,7 +94,7 @@ const register = () => {
           </Text>
         </View>
 
-        <View style={{ marginTop: 55 }}>
+        <View style={{ marginTop: 35 }}>
           <Text
             style={{
               fontSize: 17,
@@ -267,6 +282,49 @@ const register = () => {
           </View>
         </View>
 
+        <View style={{ marginTop: 1 }}>
+          <Text
+            style={{
+              fontSize: 17,
+              fontWeight: "bold",
+              marginTop: 20,
+              marginBottom: -20,
+              color: "#041E42",
+            }}
+          >
+            Enter your role
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 5,
+              backgroundColor: "#E0E0E0",
+              paddingVertical: 5,
+              borderRadius: 5,
+              marginTop: 30,
+            }}
+          >
+            <FontAwesome5
+              name="lock"
+              size={24}
+              color="black"
+              style={{ marginLeft: 12, marginRight: 10 }}
+            />
+            <TextInput
+              value={role}
+              onChangeText={(text) => setRole(text)}
+              placeholder="Enter your role"
+              style={{
+                color: role ? "black" : "gray",
+                marginVertical: 10,
+                width: 300,
+                fontSize: role ? 18 : 15,
+              }}
+            />
+          </View>
+        </View>
+
         {/* <View
           style={{
             marginTop: 12,
@@ -281,30 +339,54 @@ const register = () => {
           </Text>
         </View> */}
 
-        <View style={{ marginTop: 80 }} />
+        <View style={{ marginTop: 30 }} />
 
-        <Pressable
-          onPress={handleRegister}
-          style={{
-            width: 200,
-            backgroundColor: "#0072b1",
-            borderRadius: 6,
-            marginLeft: "auto",
-            marginRight: "auto",
-            padding: 10,
-          }}
-        >
-          <Text
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Pressable
+            onPress={handleCancel}
             style={{
-              textAlign: "center",
-              color: "white",
-              fontSize: 20,
-              fontWeight: "bold",
+              width: 150,
+              //backgroundColor: "#0072b1",
+              borderRadius: 6,
+              marginLeft: "auto",
+              marginRight: "auto",
+              padding: 10,
             }}
           >
-            Register
-          </Text>
-        </Pressable>
+            <Text
+              style={{
+                textAlign: "center",
+                color: "black",
+                fontSize: 20,
+                fontWeight: "bold",
+              }}
+            >
+              Cancel
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={handleRegister}
+            style={{
+              width: 150,
+              backgroundColor: "#0072b1",
+              borderRadius: 6,
+              marginLeft: "auto",
+              marginRight: "auto",
+              padding: 10,
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                color: "white",
+                fontSize: 20,
+                fontWeight: "bold",
+              }}
+            >
+              Register
+            </Text>
+          </Pressable>
+        </View>
 
         <View style={{ marginTop: 10 }} />
 

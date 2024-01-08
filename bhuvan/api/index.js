@@ -39,7 +39,7 @@ const { send } = require("process");
 // Endpoint to register an user
 app.post("/register", async (req, res) => {
   try {
-    const { name, email, password, department } = req.body;
+    const { name, email, password, department, role } = req.body;
 
     // Check if the email already exists
     const existingUser = await User.findOne({ email });
@@ -54,6 +54,7 @@ app.post("/register", async (req, res) => {
       email,
       password,
       department,
+      role,
     });
 
     // Generate the verification token
@@ -173,7 +174,7 @@ app.post("/login", async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, secretKey);
 
-    res.status(200).json({ token });
+    res.status(200).json({ token, role: user.role });
   } catch (error) {
     console.log("Error while logging in!", error);
     res.status(500).json({ message: "Login failed, Internal server error!" });
