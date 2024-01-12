@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const index = () => {
+const MGNREGA = () => {
   return (
     <View>
-      <Text>index-user</Text>
+      <Text>MGNREGA</Text>
     </View>
   );
 };
 
-export default index;
+export default MGNREGA;
 
 const styles = StyleSheet.create({});

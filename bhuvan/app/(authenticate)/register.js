@@ -41,7 +41,7 @@ const register = () => {
     };
 
     axios
-      .post("http://192.168.1.3:3000/register", user)
+      .post("http://10.1.14.1:3000/register", user)
       .then((response) => {
         console.log(response);
         Alert.alert("Registration successful", "Please verify your e-mail");
@@ -305,12 +305,13 @@ const register = () => {
               marginTop: 30,
             }}
           >
-            <FontAwesome5
-              name="lock"
+            <MaterialIcons
+              name="settings-accessibility"
               size={24}
               color="black"
               style={{ marginLeft: 12, marginRight: 10 }}
             />
+
             <TextInput
               value={role}
               onChangeText={(text) => setRole(text)}

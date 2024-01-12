@@ -174,7 +174,14 @@ app.post("/login", async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, secretKey);
 
-    res.status(200).json({ token, role: user.role });
+    res
+      .status(200)
+      .json({
+        token,
+        role: user.role,
+        verified: user.verified,
+        department: user.department,
+      });
   } catch (error) {
     console.log("Error while logging in!", error);
     res.status(500).json({ message: "Login failed, Internal server error!" });

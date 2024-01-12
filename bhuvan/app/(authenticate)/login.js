@@ -9,7 +9,7 @@ import {
   Pressable,
   Alert,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -21,21 +21,76 @@ const login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userRole, setUserRole] = useState("");
+  const [userDepartment, setUserDepartment] = useState("");
+  const [verified, setVerified] = useState(false);
   const router = useRouter();
 
-  //const userRole = setRole;
+  const handleLogin = () => {
+    const user = {
+      email: email,
+      password: password,
+      role: "role",
+      department: "department",
+      verified: "verified",
+    };
+
+    axios.post("http://10.1.14.1:3000/login", user).then((response) => {
+      console.log("Full response:", response);
+      const token = response.data.token;
+      const verified = response.data.verified;
+      console.log("Verified:", verified);
+      setVerified(verified);
+      const role = response.data.role;
+      const dept = response.data.department || " ";
+      setUserDepartment(dept);
+      console.log("Department:", dept);
+      setUserRole(role);
+      console.log(role);
+      AsyncStorage.setItem("authToken", token);
+
+      if (role === "user") {
+        if (verified === true) {
+          if (dept === "JUMP") {
+            router.replace("/(tabs)/aquifier");
+          } else if (dept === "HFA") {
+            router.replace("/(tabs)/aquifier");
+          } else if (dept === "FASAL") {
+            router.replace("/(tabs)/aquifier");
+          } else if (dept === "Aquifier") {
+            router.replace("/(tabs)/aquifier");
+          } else if (dept === "MGNREGA") {
+            router.replace("/(tabs)/aquifier");
+          } else {
+            Alert.alert(
+              "Invalid Department",
+              "You do not have access to this department."
+            );
+          }
+        } else if (verified === false) {
+          Alert.alert(
+            "Email not verified",
+            "Please verify your email to continue. Else, contact the administrator."
+          );
+        }
+      } else if (role === "admin") {
+        router.replace("/(admin)/dashboard");
+      } else if (role !== "user" && role !== "admin") {
+        Alert.alert("Invalid Credentials", "Please enter valid credentials.");
+      }
+    });
+  };
 
   // useEffect(() => {
   //   const checkLoginStatus = async () => {
   //     try {
   //       const token = await AsyncStorage.getItem("authToken");
   //       if (token) {
-  //         //const userRole = "admin" || "user";
+  //         const userRole = "user";
 
   //         if (userRole === "user") {
-  //           //router.replace("/(tabs)/home");
+  //           router.replace("/(tabs)/aquifier");
   //         } else if (userRole === "admin") {
-  //           //router.replace("/(admin)/dashboard");
+  //           router.replace("/(admin)/dashboard");
   //         }
   //       }
   //     } catch (error) {
@@ -44,52 +99,7 @@ const login = () => {
   //   };
 
   //   checkLoginStatus();
-  // }, []);
-
-  const handleLogin = () => {
-    const user = {
-      email: email,
-      password: password,
-      role: "role",
-    };
-
-    axios.post("http://192.168.1.3:3000/login", user).then((response) => {
-      console.log(response);
-      const token = response.data.token;
-      const role = response.data.role;
-      setUserRole(role);
-      //console.log(role);
-      AsyncStorage.setItem("authToken", token);
-      Alert.alert("Login successful");
-
-      if (role === "user") {
-        router.replace("/(tabs)/home");
-      } else if (role === "admin") {
-        router.replace("/(admin)/dashboard");
-      }
-    });
-  };
-
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const token = await AsyncStorage.getItem("authToken");
-        if (token) {
-          //const userRole = "admin" || "user";
-
-          if (userRole === "user") {
-            router.replace("/(tabs)/home");
-          } else if (userRole === "admin") {
-            router.replace("/(admin)/dashboard");
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    checkLoginStatus();
-  }, [userRole]);
+  // }, [userRole]);
 
   return (
     <SafeAreaView
